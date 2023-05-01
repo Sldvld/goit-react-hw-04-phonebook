@@ -6,22 +6,20 @@ import css from './Form.module.css';
 export function Form({ onSubmit }) {
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
-
-  const resetForm = () => {
-    setName('');
-    setNumber('');
-  };
+  const nameInputId = nanoid(10);
+  const numberInputId = nanoid(10);
 
   const handleChange = evt => {
-    switch (evt.target.name) {
+    const { name, value } = evt.currentTarget;
+    switch (name) {
       case 'name':
-        setName(evt.currentTarget.value);
+        setName(value);
         break;
       case 'number':
-        setNumber(evt.currentTarget.value);
+        setNumber(value);
         break;
       default:
-        return;
+        throw new Error('unsupported input name');
     }
   };
 
@@ -33,15 +31,21 @@ export function Form({ onSubmit }) {
       name: name.value,
       number: number.value,
     };
-
     onSubmit(newContact);
     resetForm();
+  };
+
+  const resetForm = () => {
+    setName('');
+    setNumber('');
   };
 
   return (
     <>
       <form onSubmit={handleSubmit} className={css.form}>
-        <label className={css.formLabel}>Name</label>
+        <label htmlFor={nameInputId} className={css.formLabel}>
+          Name
+        </label>
         <input
           type="text"
           name="name"
@@ -49,11 +53,14 @@ export function Form({ onSubmit }) {
           value={name}
           onChange={handleChange}
           className={css.formInput}
+          id={nameInputId}
           pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
           title="Name may contain only letters, apostrophe, dash and spaces. For example Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan"
           required
         />
-        <label className={css.formLabel}>Number</label>
+        <label htmlFor={numberInputId} className={css.formLabel}>
+          Number
+        </label>
         <input
           type="tel"
           name="number"
@@ -61,6 +68,7 @@ export function Form({ onSubmit }) {
           value={number}
           onChange={handleChange}
           className={css.formInput}
+          id={numberInputId}
           pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
           title="Phone number must be digits and can contain spaces, dashes, parentheses and can start with +"
           required

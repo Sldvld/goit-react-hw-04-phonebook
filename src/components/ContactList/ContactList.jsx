@@ -2,16 +2,16 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import css from './ContactList.module.css';
 
-const ContactList = ({ contacts, deleteContact }) => {
+export const ContactList = ({ contacts, deleteContact }) => {
   return (
     <ul className={css.contactList}>
-      {contacts.map(item => (
-        <li className={css.contactItem} key={item.id}>
-          <span className={css.contactName}>{item.name}</span>
-          <span className={css.contactNumber}>{item.number}</span>
+      {contacts.map(({ id, name, number }) => (
+        <li className={css.contactItem} key={id}>
+          <span className={css.contactName}>{name}</span>
+          <span className={css.contactNumber}>{number}</span>
           <button
             className={css.contactButton}
-            onClick={() => deleteContact(item.id)}
+            onClick={() => deleteContact(id)}
           >
             Delete
           </button>
@@ -24,12 +24,9 @@ const ContactList = ({ contacts, deleteContact }) => {
 ContactList.propTypes = {
   contacts: PropTypes.arrayOf(
     PropTypes.shape({
-      id: PropTypes.string.isRequired,
+      id: PropTypes.string,
       name: PropTypes.string.isRequired,
       number: PropTypes.string.isRequired,
     })
   ).isRequired,
-  deleteContact: PropTypes.func.isRequired,
 };
-
-export default ContactList;
